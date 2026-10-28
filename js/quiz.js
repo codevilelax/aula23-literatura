@@ -159,7 +159,6 @@ const PERGUNTAS = [
           ${FORMAS.map((f, i) => `<span class="cor-${f.cor}" style="--i:${i}"><svg viewBox="0 0 24 24">${f.svg}</svg></span>`).join('')}
         </div>
         <h3 class="quiz-title">Quiz: <em>A cabeça do santo</em></h3>
-        <p class="quiz-desc"><strong>${PERGUNTAS.length} perguntas</strong>, <strong>${TEMPO_POR_PERGUNTA} segundos</strong> cada. Quanto mais rápido você acertar, mais pontos ganha.</p>
         <button type="button" class="btn btn-primary btn-lg" data-quiz="comecar">Começar</button>
         <p class="quiz-hint">No teclado, responda com as teclas <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd>.</p>
       </div>`;

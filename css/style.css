@@ -777,18 +777,11 @@ kbd {
 }
 .quiz-shapes svg { width: 30px; height: 30px; fill: currentColor; }
 .quiz-title {
-  margin-bottom: .4em;
+  margin-bottom: .9em;
   font-family: var(--serif);
   font-size: clamp(2rem, 5vw, 3.2rem);
 }
 .quiz-title em { color: var(--pessego); }
-.quiz-desc {
-  max-width: 42ch;
-  margin-bottom: 1.6em;
-  color: var(--areia-2);
-  font-size: clamp(1.08rem, 2vw, 1.3rem);
-}
-.quiz-desc strong { color: var(--areia); }
 .quiz-hint { margin: 1.5em 0 0; color: rgba(243, 230, 207, .75); font-size: .95rem; }
 
 /* tela de pergunta */
