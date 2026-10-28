@@ -5,7 +5,8 @@
 
    Tipos de slide e seus campos:
      capa        → aula, titulo, subtitulo, imagem
-     frase       → titulo, texto, nota (opcional), imagem
+     frase       → titulo, texto, nota (opcional), imagem,
+                   retrato (opcional: foto recortada que fica à direita)
      topicos     → titulo, topicos [lista], imagem (opcional)
      cards       → titulo, cards [{ marca, titulo, texto }], imagem (opcional)
      contraste   → titulo, esquerda e direita { titulo, itens, riscado },
@@ -123,6 +124,8 @@ const SLIDES = [
     nota: 'Companhia das Letras, 2014',
     imagem: FOTOS.paginas,
     alt: 'Parede coberta de páginas de livros antigos',
+    retrato: 'img/socorro-acioli.png',
+    retratoAlt: 'Retrato da escritora Socorro Acioli',
   },
   {
     tipo: 'topicos',
@@ -314,6 +317,7 @@ const SLIDES = [
         <p class="frase a" style="--i:2">${s.texto}</p>
         ${s.nota ? `<p class="slide-nota a" style="--i:3">${s.nota}</p>` : ''}
       </div>
+      ${s.retrato ? `<figure class="slide-retrato a" style="--i:2"><img data-src="${s.retrato}" alt="${s.retratoAlt || ''}" decoding="async"></figure>` : ''}
       ${rodape}`,
 
     topicos: s => `
@@ -388,7 +392,7 @@ const SLIDES = [
 
   function criarSlide(s, i) {
     const el = document.createElement('section');
-    el.className = `slide slide--${s.tipo}`;
+    el.className = `slide slide--${s.tipo}${s.retrato ? ' slide--com-retrato' : ''}`;
     el.setAttribute('role', 'group');
     el.setAttribute('aria-roledescription', 'slide');
     el.setAttribute('aria-label', `${i + 1} de ${total}: ${nomeDoSlide(s)}`);
