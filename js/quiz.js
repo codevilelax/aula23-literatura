@@ -160,7 +160,6 @@ const PERGUNTAS = [
         </div>
         <h3 class="quiz-title">Quiz: <em>A cabeça do santo</em></h3>
         <button type="button" class="btn btn-primary btn-lg" data-quiz="comecar">Começar</button>
-        <p class="quiz-hint">No teclado, responda com as teclas <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd>.</p>
       </div>`;
   }
 

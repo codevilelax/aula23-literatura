@@ -659,19 +659,6 @@ strong { font-weight: 700; }
   font-family: var(--serif);
   font-size: clamp(1.5rem, 2.6vw, 2rem);
 }
-kbd {
-  display: inline-block;
-  min-width: 1.9em;
-  padding: .05em .5em;
-  border: 1px solid rgba(255, 255, 255, .28);
-  border-bottom-width: 3px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, .07);
-  color: var(--areia);
-  font: 700 .82rem/1.5 var(--sans);
-  text-align: center;
-}
-
 .roteiro-wrap {
   margin-top: 26px;
   border: 1px solid var(--vidro-borda);
@@ -782,7 +769,6 @@ kbd {
   font-size: clamp(2rem, 5vw, 3.2rem);
 }
 .quiz-title em { color: var(--pessego); }
-.quiz-hint { margin: 1.5em 0 0; color: rgba(243, 230, 207, .75); font-size: .95rem; }
 
 /* tela de pergunta */
 .quiz-hud {
