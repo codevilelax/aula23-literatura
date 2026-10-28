@@ -247,7 +247,7 @@ const SLIDES = [
     tipo: 'integrantes',
     rotulo: 'Grupo',
     titulo: 'Integrantes',
-    nomes: ['Pedro Vilela', 'Eduarda Monforte', 'Luisa Lima', 'Rebeca Mendes'],
+    nomes: ['Pedro Vilela', 'Eduarda Monforte', 'Luisa Lima', 'Rebeca Mendes', 'Mariana Brandão'],
     agradecimento: 'Agradecemos a atenção!',
     referencia: 'ACIOLI, S. <em>A cabeça do santo</em>. São Paulo: Companhia das Letras, 2014.',
     imagem: FOTOS.entardecer,
@@ -385,8 +385,8 @@ const SLIDES = [
         ${rotulo(s)}
         ${titulo(s)}
         <ul class="nomes">${lista(s.nomes, 2)}</ul>
-        <p class="integrantes-agradece a" style="--i:6">${s.agradecimento}</p>
-        <p class="integrantes-ref a" style="--i:7">${s.referencia}</p>
+        <p class="integrantes-agradece a" style="--i:${s.nomes.length + 2}">${s.agradecimento}</p>
+        <p class="integrantes-ref a" style="--i:${s.nomes.length + 3}">${s.referencia}</p>
       </div>`,
   };
 
