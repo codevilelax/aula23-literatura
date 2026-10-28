@@ -630,9 +630,7 @@ const SLIDES = [
     abrir(Number(botao.dataset.slide) || 0);
   });
 
-  /* ---------- Roteiro, total e prévia na seção de slides ---------- */
-  document.querySelectorAll('[data-total-slides]').forEach(el => { el.textContent = total; });
-
+  /* ---------- Roteiro e prévia na seção de slides ---------- */
   const roteiro = document.getElementById('roteiro');
   if (roteiro) {
     roteiro.innerHTML = SLIDES.map((s, i) => `

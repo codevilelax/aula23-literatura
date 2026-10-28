@@ -655,29 +655,10 @@ strong { font-weight: 700; }
 .preview-play svg { width: 32px; height: 32px; margin-left: 4px; fill: currentColor; }
 
 .slides-info h3 {
-  margin-bottom: .6em;
+  margin-bottom: .9em;
   font-family: var(--serif);
   font-size: clamp(1.5rem, 2.6vw, 2rem);
 }
-.slides-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 0 0 26px;
-  padding: 0;
-  list-style: none;
-}
-.slides-meta li {
-  padding: .4em .9em;
-  border: 1px solid var(--vidro-borda);
-  border-radius: 999px;
-  background: var(--vidro);
-  color: var(--areia-2);
-  font-size: .92rem;
-}
-.slides-meta strong { color: var(--pessego); }
-.atalhos { margin: 22px 0 0; color: var(--areia-2); font-size: .92rem; line-height: 2.1; }
-
 kbd {
   display: inline-block;
   min-width: 1.9em;
