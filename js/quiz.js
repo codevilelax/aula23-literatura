@@ -272,21 +272,14 @@ const PERGUNTAS = [
 
   function telaFinal() {
     const n = rodada.length;
-    const taxa = acertos / n;
-    const mensagem =
-      acertos === n ? 'Gabaritou! Que leitura!' :
-      taxa >= 0.7 ? 'Mandou muito bem!' :
-      taxa >= 0.4 ? 'Bom jogo! Dá para melhorar.' :
-      'Que tal rever os slides e tentar de novo?';
 
     app.innerHTML = `
       <div class="quiz-screen quiz-end">
         <div class="quiz-trofeu" aria-hidden="true">${ICONE_TROFEU}</div>
         <p class="eyebrow">Fim de jogo</p>
-        <h3 class="quiz-end-title" tabindex="-1">${mensagem}</h3>
         <p class="quiz-score"><span data-quiz="total">0</span></p>
         <p class="quiz-score-label">pontos</p>
-        <p class="quiz-hits">Você acertou <strong>${acertos}</strong> de <strong>${n}</strong> perguntas</p>
+        <p class="quiz-hits" tabindex="-1">Você acertou <strong>${acertos}</strong> de <strong>${n}</strong> perguntas</p>
         <ol class="quiz-dots" aria-label="Resumo das respostas">
           ${historico.map((ok, i) => `
             <li class="${ok ? 'dot--certo' : 'dot--errado'}" title="Pergunta ${i + 1}: ${ok ? 'acertou' : 'errou'}">
@@ -298,7 +291,7 @@ const PERGUNTAS = [
 
     app.querySelector('[data-quiz="total"]').textContent = formatar(poucoMovimento() ? pontos : 0);
     animarNumero(app.querySelector('[data-quiz="total"]'), 0, pontos, 1400);
-    app.querySelector('.quiz-end-title').focus({ preventScroll: true });
+    app.querySelector('.quiz-hits').focus({ preventScroll: true });
     rolarParaQuiz();
     confete();
   }

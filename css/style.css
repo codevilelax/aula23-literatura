@@ -981,13 +981,6 @@ strong { font-weight: 600; }
   fill: none; stroke: #2a1238; stroke-width: 2;
   stroke-linecap: round; stroke-linejoin: round;
 }
-.quiz-end-title {
-  margin-bottom: .4em;
-  font-family: var(--serif);
-  font-size: clamp(1.8rem, 4.4vw, 2.7rem);
-  font-weight: 400;
-  outline: none;
-}
 .quiz-score {
   margin: 0;
   color: #ffb37a;
@@ -1002,7 +995,7 @@ strong { font-weight: 600; }
   letter-spacing: .2em;
   text-transform: uppercase;
 }
-.quiz-hits { font-size: clamp(1.1rem, 2.2vw, 1.4rem); }
+.quiz-hits { font-size: clamp(1.1rem, 2.2vw, 1.4rem); outline: none; }
 .quiz-hits strong { color: #ffb37a; }
 .quiz-dots {
   display: flex;
