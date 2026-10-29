@@ -7,6 +7,8 @@
      erradas    → as três alternativas erradas
      explicacao → aparece depois que a pessoa responde
    As alternativas são embaralhadas a cada partida.
+   São 2 jogadores ao mesmo tempo: o 1 responde com Q W A S
+   e o 2 com I O K L (mesma posição das alternativas na tela).
    ========================================================= */
 
 const TEMPO_POR_PERGUNTA = 20; // segundos
@@ -93,18 +95,25 @@ const PERGUNTAS = [
   const ICONE_CERTO = '<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';
   const ICONE_ERRADO = '<svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
 
+  // Teclas de cada jogador, na mesma posição das alternativas (2 em cima, 2 embaixo)
+  const TECLAS = [
+    ['KeyQ', 'KeyW', 'KeyA', 'KeyS'],
+    ['KeyI', 'KeyO', 'KeyK', 'KeyL'],
+  ];
+  const LETRAS = [['Q', 'W', 'A', 'S'], ['I', 'O', 'K', 'L']];
+
   let rodada = [];
   let indice = 0;
-  let pontos = 0;
-  let acertos = 0;
-  let sequencia = 0;
-  let historico = [];
+  let nomes = ['', ''];
+  let jogadores = [];
   let inicioPergunta = 0;
   let quadro = 0;
   let respondendo = false;
 
   const formatar = n => n.toLocaleString('pt-BR');
   const poucoMovimento = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // os nomes são digitados pelos jogadores, então não podem virar HTML
+  const escapar = texto => texto.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   function embaralhar(lista) {
     const copia = lista.slice();
@@ -124,10 +133,14 @@ const PERGUNTAS = [
       ]),
     }));
     indice = 0;
-    pontos = 0;
-    acertos = 0;
-    sequencia = 0;
-    historico = [];
+    jogadores = nomes.map((nome, n) => ({
+      nome: nome || `Jogador ${n + 1}`,
+      pontos: 0,
+      acertos: 0,
+      historico: [],
+      escolha: null,
+      tempo: 0,
+    }));
   }
 
   function rolarParaQuiz() {
@@ -162,26 +175,65 @@ const PERGUNTAS = [
       </div>`;
   }
 
+  function telaNomes() {
+    app.innerHTML = `
+      <form class="quiz-screen quiz-start quiz-nomes">
+        <h3 class="quiz-title">Quem vai jogar?</h3>
+        <div class="quiz-nomes-campos">
+          ${[0, 1].map(n => `
+            <div class="quiz-nome jogador-${n + 1}">
+              <label for="quiz-nome-${n + 1}">Jogador ${n + 1}</label>
+              <input id="quiz-nome-${n + 1}" maxlength="20" autocomplete="off" placeholder="Nome" value="${escapar(nomes[n])}">
+              <p class="quiz-nome-teclas">Responde com ${LETRAS[n].map(l => `<kbd>${l}</kbd>`).join('')}</p>
+            </div>`).join('')}
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg">Começar o jogo</button>
+      </form>`;
+    app.querySelector('input').focus({ preventScroll: true });
+  }
+
+  const placar = n => `
+    <span class="quiz-chip quiz-chip--jogador jogador-${n + 1}">
+      ${escapar(jogadores[n].nome)} <strong data-pontos="${n}">${formatar(jogadores[n].pontos)}</strong>
+    </span>`;
+
   function telaPergunta() {
     const p = rodada[indice];
+    jogadores.forEach(j => { j.escolha = null; j.tempo = 0; });
     app.innerHTML = `
       <div class="quiz-screen quiz-play">
         <div class="quiz-hud">
+          ${placar(0)}
           <span class="quiz-chip">Pergunta <strong>${indice + 1}</strong> de ${rodada.length}</span>
-          <span class="quiz-chip"><strong data-quiz="pontos">${formatar(pontos)}</strong> pontos</span>
+          ${placar(1)}
         </div>
         <div class="quiz-timebar" aria-hidden="true"><span></span></div>
         <div class="quiz-body">
           <div class="quiz-clock" aria-hidden="true">${TEMPO_POR_PERGUNTA}</div>
-          <h3 class="quiz-question" tabindex="-1">${p.pergunta}<span class="sr-only"> Você tem ${TEMPO_POR_PERGUNTA} segundos.</span></h3>
+          <h3 class="quiz-question" tabindex="-1">${p.pergunta}<span class="sr-only"> Vocês têm ${TEMPO_POR_PERGUNTA} segundos.</span></h3>
         </div>
-        <div class="quiz-answers" role="group" aria-label="Alternativas">
+        <div class="quiz-answers">
           ${p.alternativas.map((a, i) => `
-            <button type="button" class="quiz-answer cor-${FORMAS[i].cor}" data-resposta="${i}" aria-keyshortcuts="${i + 1}">
+            <div class="quiz-answer cor-${FORMAS[i].cor}">
               <svg class="quiz-shape" viewBox="0 0 24 24" aria-hidden="true">${FORMAS[i].svg}</svg>
               <span class="quiz-answer-text">${a.texto}</span>
+              <span class="quiz-quem"></span>
               <span class="quiz-mark" aria-hidden="true"></span>
-            </button>`).join('')}
+            </div>`).join('')}
+        </div>
+        <div class="quiz-controles">
+          ${jogadores.map((j, n) => `
+            <div class="quiz-controle jogador-${n + 1}" role="group" aria-label="Respostas de ${escapar(j.nome)}">
+              <p class="quiz-controle-nome">${escapar(j.nome)}</p>
+              <div class="quiz-controle-botoes">
+                ${FORMAS.map((f, i) => `
+                  <button type="button" class="cor-${f.cor}" data-jogador="${n}" data-resposta="${i}"
+                          aria-label="${escapar(p.alternativas[i].texto)}" aria-keyshortcuts="${LETRAS[n][i]}">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">${f.svg}</svg><kbd>${LETRAS[n][i]}</kbd>
+                  </button>`).join('')}
+              </div>
+              <p class="quiz-controle-status" data-status="${n}">Pensando…</p>
+            </div>`).join('')}
         </div>
         <div class="quiz-feedback" aria-live="polite"></div>
       </div>`;
@@ -205,92 +257,123 @@ const PERGUNTAS = [
       relogio.textContent = Math.ceil(restante);
       barra.classList.toggle('is-urgente', urgente);
       relogio.classList.toggle('is-urgente', urgente);
-      if (restante <= 0) { responder(null); return; }
+      if (restante <= 0) { revelar(); return; }
       quadro = requestAnimationFrame(passo);
     };
     quadro = requestAnimationFrame(passo);
   }
 
-  // escolha = índice da alternativa, ou null quando o tempo acaba
-  function responder(escolha) {
+  // O jogador n escolheu a alternativa i. A escolha fica escondida até os dois responderem.
+  function escolher(n, i) {
+    const j = jogadores[n];
+    if (!respondendo || j.escolha !== null) return;
+    j.escolha = i;
+    j.tempo = Math.min(TEMPO_POR_PERGUNTA, (performance.now() - inicioPergunta) / 1000);
+
+    const controle = app.querySelector(`.quiz-controle.jogador-${n + 1}`);
+    controle.classList.add('is-respondeu');
+    controle.querySelectorAll('button').forEach(b => { b.disabled = true; });
+    app.querySelector(`[data-status="${n}"]`).textContent = 'Respondeu!';
+
+    if (jogadores.every(x => x.escolha !== null)) revelar();
+  }
+
+  // Mostra a resposta certa e soma os pontos (quando os dois respondem ou o tempo acaba)
+  function revelar() {
     if (!respondendo) return;
     respondendo = false;
     cancelAnimationFrame(quadro);
 
     const p = rodada[indice];
-    const decorrido = Math.min(TEMPO_POR_PERGUNTA, (performance.now() - inicioPergunta) / 1000);
     const indiceCerto = p.alternativas.findIndex(a => a.certa);
-    const acertou = escolha === indiceCerto;
-    const pontosAntes = pontos;
-    let ganhos = 0;
+    const antes = jogadores.map(j => j.pontos);
 
-    if (acertou) {
-      // de 1000 (resposta imediata) até 500 (no último segundo)
-      ganhos = Math.round(1000 * (1 - (decorrido / TEMPO_POR_PERGUNTA) / 2));
-      pontos += ganhos;
-      acertos++;
-      sequencia++;
-    } else {
-      sequencia = 0;
-    }
-    historico.push(acertou);
-
-    app.querySelectorAll('.quiz-answer').forEach((botao, i) => {
-      botao.disabled = true;
-      const marca = botao.querySelector('.quiz-mark');
-      if (i === indiceCerto) {
-        botao.classList.add('is-correct');
-        marca.innerHTML = ICONE_CERTO;
-      } else if (i === escolha) {
-        botao.classList.add('is-wrong');
-        marca.innerHTML = ICONE_ERRADO;
-      } else {
-        botao.classList.add('is-dim');
+    const resultados = jogadores.map(j => {
+      const acertou = j.escolha === indiceCerto;
+      let ganhos = 0;
+      if (acertou) {
+        // de 1000 (resposta imediata) até 500 (no último segundo)
+        ganhos = Math.round(1000 * (1 - (j.tempo / TEMPO_POR_PERGUNTA) / 2));
+        j.pontos += ganhos;
+        j.acertos++;
       }
+      j.historico.push(acertou);
+      return { ganhos, tipo: j.escolha === null ? 'tempo' : acertou ? 'certo' : 'errado' };
     });
 
-    const tipo = escolha === null ? 'tempo' : acertou ? 'certo' : 'errado';
-    const tituloFeedback = { certo: 'Correto!', errado: 'Errou!', tempo: 'Tempo esgotado!' }[tipo];
+    app.querySelectorAll('.quiz-answer').forEach((card, i) => {
+      const marca = card.querySelector('.quiz-mark');
+      const escolheram = jogadores.filter(j => j.escolha === i);
+      if (i === indiceCerto) {
+        card.classList.add('is-correct');
+        marca.innerHTML = ICONE_CERTO;
+      } else if (escolheram.length) {
+        card.classList.add('is-wrong');
+        marca.innerHTML = ICONE_ERRADO;
+      } else {
+        card.classList.add('is-dim');
+      }
+      card.querySelector('.quiz-quem').innerHTML = escolheram
+        .map(j => `<span class="jogador-${jogadores.indexOf(j) + 1}">${escapar(j.nome)}</span>`).join('');
+    });
+
+    resultados.forEach((r, n) => {
+      const controle = app.querySelector(`.quiz-controle.jogador-${n + 1}`);
+      controle.classList.add(`is-${r.tipo}`);
+      controle.querySelectorAll('button').forEach(b => { b.disabled = true; });
+      app.querySelector(`[data-status="${n}"]`).textContent =
+        { certo: `Acertou! +${formatar(r.ganhos)}`, errado: 'Errou!', tempo: 'Não respondeu' }[r.tipo];
+      animarNumero(app.querySelector(`[data-pontos="${n}"]`), antes[n], jogadores[n].pontos, 700);
+    });
+
     const ultima = indice === rodada.length - 1;
     const feedback = app.querySelector('.quiz-feedback');
-
     feedback.innerHTML = `
-      <div class="feedback feedback--${tipo}">
-        <p class="feedback-titulo">${tituloFeedback}${acertou ? ` <span class="feedback-pts">+${formatar(ganhos)} pontos</span>` : ''}</p>
-        <p class="feedback-texto">${acertou ? '' : `<strong>Resposta certa:</strong> ${p.certa}. `}${p.explicacao}</p>
+      <div class="feedback feedback--rodada">
+        <p class="feedback-texto"><strong>Resposta certa:</strong> ${p.certa}. ${p.explicacao}</p>
         <div class="feedback-rodape">
-          <p class="feedback-total">Total: <strong>${formatar(pontos)}</strong> pontos · ${acertos} de ${indice + 1} acertos${sequencia >= 2 ? ` · ${sequencia} seguidas!` : ''}</p>
+          <p class="feedback-total">${jogadores.map(j => `${escapar(j.nome)}: <strong>${formatar(j.pontos)}</strong>`).join(' · ')}</p>
           <button type="button" class="btn btn-primary" data-quiz="${ultima ? 'final' : 'proxima'}">${ultima ? 'Ver resultado' : 'Próxima pergunta'} →</button>
         </div>
       </div>`;
 
-    animarNumero(app.querySelector('[data-quiz="pontos"]'), pontosAntes, pontos, 700);
     feedback.querySelector('button').focus({ preventScroll: true });
     feedback.scrollIntoView({ behavior: poucoMovimento() ? 'auto' : 'smooth', block: 'nearest' });
   }
 
   function telaFinal() {
     const n = rodada.length;
+    const [a, b] = jogadores;
+    const vencedor = a.pontos === b.pontos ? null : a.pontos > b.pontos ? a : b;
 
     app.innerHTML = `
       <div class="quiz-screen quiz-end">
         <img class="quiz-trofeu" src="img/ai-dentro.jpeg" width="320" height="352" alt="">
         <p class="eyebrow">Fim de jogo</p>
-        <p class="quiz-score"><span data-quiz="total">0</span></p>
-        <p class="quiz-score-label">pontos</p>
-        <p class="quiz-hits" tabindex="-1">Você acertou <strong>${acertos}</strong> de <strong>${n}</strong> perguntas</p>
-        <ol class="quiz-dots" aria-label="Resumo das respostas">
-          ${historico.map((ok, i) => `
-            <li class="${ok ? 'dot--certo' : 'dot--errado'}" title="Pergunta ${i + 1}: ${ok ? 'acertou' : 'errou'}">
-              <span aria-hidden="true">${i + 1}</span><span class="sr-only">Pergunta ${i + 1}: ${ok ? 'acertou' : 'errou'}</span>
-            </li>`).join('')}
-        </ol>
+        <h3 class="quiz-vencedor" tabindex="-1">${vencedor ? `<em>${escapar(vencedor.nome)}</em> venceu!` : 'Empate!'}</h3>
+        <div class="quiz-finais">
+          ${jogadores.map((j, i) => `
+            <div class="quiz-final jogador-${i + 1}${j === vencedor ? ' is-vencedor' : ''}">
+              <p class="quiz-final-nome">${escapar(j.nome)}</p>
+              <p class="quiz-score"><span data-total="${i}">0</span></p>
+              <p class="quiz-score-label">pontos · ${j.acertos} de ${n} acertos</p>
+              <ol class="quiz-dots" aria-label="Respostas de ${escapar(j.nome)}">
+                ${j.historico.map((ok, k) => `
+                  <li class="${ok ? 'dot--certo' : 'dot--errado'}" title="Pergunta ${k + 1}: ${ok ? 'acertou' : 'errou'}">
+                    <span aria-hidden="true">${k + 1}</span><span class="sr-only">Pergunta ${k + 1}: ${ok ? 'acertou' : 'errou'}</span>
+                  </li>`).join('')}
+              </ol>
+            </div>`).join('')}
+        </div>
         <button type="button" class="btn btn-primary btn-lg" data-quiz="denovo">Jogar de novo</button>
       </div>`;
 
-    app.querySelector('[data-quiz="total"]').textContent = formatar(poucoMovimento() ? pontos : 0);
-    animarNumero(app.querySelector('[data-quiz="total"]'), 0, pontos, 1400);
-    app.querySelector('.quiz-hits').focus({ preventScroll: true });
+    jogadores.forEach((j, i) => {
+      const el = app.querySelector(`[data-total="${i}"]`);
+      el.textContent = formatar(poucoMovimento() ? j.pontos : 0);
+      animarNumero(el, 0, j.pontos, 1400);
+    });
+    app.querySelector('.quiz-vencedor').focus({ preventScroll: true });
     rolarParaQuiz();
     confete();
   }
@@ -388,16 +471,15 @@ const PERGUNTAS = [
   /* ---------- Eventos ---------- */
   app.addEventListener('click', e => {
     const resposta = e.target.closest('[data-resposta]');
-    if (resposta) { responder(Number(resposta.dataset.resposta)); return; }
+    if (resposta) { escolher(Number(resposta.dataset.jogador), Number(resposta.dataset.resposta)); return; }
 
     const botao = e.target.closest('button[data-quiz]');
     if (!botao) return;
     switch (botao.dataset.quiz) {
       case 'comecar':
       case 'denovo':
-        novaRodada();
+        telaNomes();
         rolarParaQuiz();
-        telaPergunta();
         break;
       case 'proxima':
         indice++;
@@ -409,18 +491,27 @@ const PERGUNTAS = [
     }
   });
 
-  // Teclas 1 a 4 respondem (só com o quiz visível e a apresentação fechada)
+  // Tela dos nomes: o jogo começa quando o formulário é enviado
+  app.addEventListener('submit', e => {
+    e.preventDefault();
+    nomes = [0, 1].map(n => app.querySelector(`#quiz-nome-${n + 1}`).value.trim());
+    novaRodada();
+    telaPergunta();
+  });
+
+  // Teclas de cada jogador (só com o quiz visível e a apresentação fechada)
   document.addEventListener('keydown', e => {
     if (!respondendo || e.altKey || e.ctrlKey || e.metaKey) return;
     if (document.documentElement.classList.contains('deck-aberto')) return;
-    const numero = Number(e.key);
-    if (!(numero >= 1 && numero <= 4)) return;
     const area = app.getBoundingClientRect();
     if (area.bottom < 0 || area.top > window.innerHeight) return;
-    e.preventDefault();
-    responder(numero - 1);
+    TECLAS.forEach((teclas, n) => {
+      const i = teclas.indexOf(e.code);
+      if (i === -1) return;
+      e.preventDefault();
+      escolher(n, i);
+    });
   });
 
-  novaRodada();
   telaInicio();
 })();
