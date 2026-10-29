@@ -214,24 +214,6 @@ strong { font-weight: 600; }
 .nav-menu a:hover { color: var(--areia); }
 .nav-menu a.is-active { color: var(--areia); border-bottom-color: var(--ocre); }
 
-.nav-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: .45em;
-  margin-left: 10px;
-  padding: .55em 1em;
-  border: 0;
-  border-radius: var(--raio);
-  background: var(--terracota);
-  color: #fff;
-  font-size: .95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background .2s;
-}
-.nav-cta:hover { background: #c0582c; }
-.nav-cta svg { width: 1em; height: 1em; fill: currentColor; }
-
 .nav-toggle { display: none; }
 
 @media (max-width: 960px) {
@@ -284,13 +266,6 @@ strong { font-weight: 600; }
   }
   .nav-menu a { padding: .85em 1em; font-size: 1.05rem; border-bottom: 1px solid #3a2b1f; }
   .nav-menu a.is-active { border-bottom-color: var(--ocre); }
-  .nav-cta {
-    width: 100%;
-    justify-content: center;
-    margin: 8px 0 0;
-    padding: .9em;
-    font-size: 1.05rem;
-  }
 }
 
 /* ---------- Hero ---------- */
