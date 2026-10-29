@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://images.unsplash.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap">
-  <link rel="stylesheet" href="css/style.css?v=7">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Pinyon+Script&amp;display=swap">
+  <link rel="stylesheet" href="css/style.css?v=8">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -250,20 +250,61 @@
 
     <!-- ================= 4. VÍDEO ================= -->
     <section class="section section-video" id="video" aria-labelledby="titulo-video">
+      <!-- 13 estrelas no fundo -->
+      <div class="video-estrelas" aria-hidden="true">
+        <span style="--x: 6%;  --y: 10%; --s: 46px; --r: -12deg"></span>
+        <span style="--x: 15%; --y: 34%; --s: 22px; --r: 18deg"></span>
+        <span style="--x: 4%;  --y: 58%; --s: 32px; --r: 6deg"></span>
+        <span style="--x: 17%; --y: 82%; --s: 40px; --r: -20deg"></span>
+        <span style="--x: 28%; --y: 5%;  --s: 18px; --r: 30deg"></span>
+        <span style="--x: 9%;  --y: 93%; --s: 16px; --r: 0deg"></span>
+        <span style="--x: 72%; --y: 6%;  --s: 24px; --r: -25deg"></span>
+        <span style="--x: 88%; --y: 15%; --s: 50px; --r: 10deg"></span>
+        <span style="--x: 94%; --y: 42%; --s: 22px; --r: -6deg"></span>
+        <span style="--x: 84%; --y: 63%; --s: 34px; --r: 22deg"></span>
+        <span style="--x: 93%; --y: 85%; --s: 42px; --r: -15deg"></span>
+        <span style="--x: 76%; --y: 94%; --s: 18px; --r: 35deg"></span>
+        <span style="--x: 48%; --y: 96%; --s: 24px; --r: 12deg"></span>
+      </div>
+
       <div class="container">
         <div class="section-head section-head--centro reveal">
           <p class="eyebrow">04 · Vídeo</p>
-          <h2 class="section-title" id="titulo-video">Nosso vídeo</h2>
+          <p class="video-chamada">Resumo da obra</p>
+          <h2 class="video-titulo" id="titulo-video">A cabeça do santo</h2>
+          <p class="video-autora">de Socorro Acioli</p>
+          <svg class="video-floreio" viewBox="0 0 240 24" aria-hidden="true">
+            <path d="M8 12h78c8 0 12-8 20-8 6 0 8 6 3 8"/>
+            <path d="M232 12h-78c-8 0-12-8-20-8-6 0-8 6-3 8"/>
+            <path class="cheio" d="M120 5l7 7-7 7-7-7z"/>
+          </svg>
         </div>
 
-        <div class="video-card reveal">
-          <iframe
-            src="https://www.youtube-nocookie.com/embed/rUqnWvV6oL0"
-            title="A história real por trás de “A cabeça do santo”, de Socorro Acioli"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen></iframe>
+        <div class="video-palco reveal">
+          <!-- pena e livro aberto, enfeites nas laterais (só em tela grande) -->
+          <svg class="video-enfeite video-pena" viewBox="0 0 120 220" aria-hidden="true">
+            <path d="M108 6C74 18 44 58 32 120c-4 20-5 38-4 52 14-22 32-52 46-82 16-34 28-60 34-84z"/>
+            <path d="M108 6L18 212"/>
+            <path d="M86 40l-14 4M78 62l-18 4M68 86l-20 4M58 110l-18 3M48 134l-14 2"/>
+            <path d="M8 214c10-2 18 0 26-4"/>
+          </svg>
+          <svg class="video-enfeite video-livro" viewBox="0 0 200 130" aria-hidden="true">
+            <path d="M100 26C80 12 46 10 10 18v92c36-8 70-6 90 8z"/>
+            <path d="M100 26c20-14 54-16 90-8v92c-36-8-70-6-90 8z"/>
+            <path d="M100 26v92"/>
+            <path d="M24 38c22-4 44-3 62 4M24 54c22-4 44-3 62 4M24 70c22-4 44-3 62 4M24 86c16-3 32-2 44 2"/>
+            <path d="M114 42c18-7 40-8 62-4M114 58c18-7 40-8 62-4M114 74c18-7 40-8 62-4M132 88c12-4 28-4 44-2"/>
+          </svg>
+
+          <div class="video-card">
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/rUqnWvV6oL0"
+              title="A história real por trás de “A cabeça do santo”, de Socorro Acioli"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen></iframe>
+          </div>
         </div>
       </div>
     </section>
@@ -344,8 +385,8 @@
   </div>
 
   <!-- ao mudar CSS ou JS, aumente o ?v= para o navegador baixar a versão nova -->
-  <script src="js/slides.js?v=7" defer></script>
-  <script src="js/quiz.js?v=7" defer></script>
-  <script src="js/main.js?v=7" defer></script>
+  <script src="js/slides.js?v=8" defer></script>
+  <script src="js/quiz.js?v=8" defer></script>
+  <script src="js/main.js?v=8" defer></script>
 </body>
 </html>
