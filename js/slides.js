@@ -634,30 +634,5 @@ const SLIDES = [
     abrir(Number(botao.dataset.slide) || 0);
   });
 
-  /* ---------- Roteiro e prévia na seção de slides ---------- */
-  const roteiro = document.getElementById('roteiro');
-  if (roteiro) {
-    roteiro.innerHTML = SLIDES.map((s, i) => `
-      <li>
-        <button type="button" data-abrir-slides data-slide="${i}">
-          <span class="roteiro-n">${String(i + 1).padStart(2, '0')}</span>
-          <span>${nomeDoSlide(s)}</span>
-        </button>
-      </li>`).join('');
-  }
-
-  const previa = document.getElementById('previa-slide');
-  if (previa) {
-    const capa = criarSlide(SLIDES[0], 0);
-    capa.removeAttribute('role');
-    capa.removeAttribute('aria-roledescription');
-    capa.removeAttribute('aria-label');
-    capa.classList.add('is-active', 'is-static');
-    capa.querySelectorAll('img').forEach(img => { img.loading = 'lazy'; });
-    previa.addEventListener('error', esconderImagemQuebrada, true);
-    carregarImagens(capa);
-    previa.appendChild(capa);
-  }
-
   window.Apresentacao = { abrir, fechar };
 })();

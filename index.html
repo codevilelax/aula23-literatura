@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://images.unsplash.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap">
-  <link rel="stylesheet" href="css/style.css?v=6">
+  <link rel="stylesheet" href="css/style.css?v=7">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -30,7 +30,7 @@
         <li><a href="#mulheres">Mulheres na literatura</a></li>
         <li><a href="#realismo">Realismo Mágico</a></li>
         <li><a href="#obra">A obra</a></li>
-        <li><a href="#slides">Slides</a></li>
+        <li><a href="#video">Vídeo</a></li>
         <li><a href="#quiz">Quiz</a></li>
       </ul>
     </nav>
@@ -248,34 +248,23 @@
       </div>
     </section>
 
-    <!-- ================= 4. SLIDES ================= -->
-    <section class="section section-slides" id="slides" aria-label="Slides">
+    <!-- ================= 4. VÍDEO ================= -->
+    <section class="section section-video" id="video" aria-labelledby="titulo-video">
       <div class="container">
         <div class="section-head section-head--centro reveal">
-          <p class="eyebrow">04 · Apresentação</p>
+          <p class="eyebrow">04 · Vídeo</p>
+          <h2 class="section-title" id="titulo-video">Nosso vídeo</h2>
         </div>
 
-        <div class="slides-card reveal">
-          <div class="slides-preview">
-            <div class="preview-stage" id="previa-slide" aria-hidden="true"></div>
-            <button type="button" class="preview-play" data-abrir-slides aria-label="Iniciar apresentação">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="7 4 20 12 7 20 7 4"/></svg>
-            </button>
-          </div>
-          <div class="slides-info">
-            <h3>Aula 23 — Vozes das Mulheres</h3>
-            <button type="button" class="btn btn-primary btn-lg" data-abrir-slides>
-              <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="7 4 20 12 7 20 7 4"/></svg>
-              Iniciar apresentação
-            </button>
-            <noscript><p>Ative o JavaScript para ver os slides.</p></noscript>
-          </div>
+        <div class="video-card reveal">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/rUqnWvV6oL0"
+            title="A história real por trás de “A cabeça do santo”, de Socorro Acioli"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen></iframe>
         </div>
-
-        <details class="roteiro-wrap reveal">
-          <summary>Sumário dos slides</summary>
-          <ol class="roteiro" id="roteiro"></ol>
-        </details>
       </div>
     </section>
 
@@ -355,8 +344,8 @@
   </div>
 
   <!-- ao mudar CSS ou JS, aumente o ?v= para o navegador baixar a versão nova -->
-  <script src="js/slides.js?v=6" defer></script>
-  <script src="js/quiz.js?v=6" defer></script>
-  <script src="js/main.js?v=6" defer></script>
+  <script src="js/slides.js?v=7" defer></script>
+  <script src="js/quiz.js?v=7" defer></script>
+  <script src="js/main.js?v=7" defer></script>
 </body>
 </html>

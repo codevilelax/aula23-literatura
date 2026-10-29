@@ -645,114 +645,23 @@ strong { font-weight: 600; }
   .tema + .tema { padding-left: 20px; border-left: 1px solid var(--borda); }
 }
 
-/* ---------- Seção de slides ---------- */
-.section-slides { background: var(--cafe); }
-.slides-card {
-  display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  gap: clamp(24px, 4vw, 48px);
-  align-items: center;
-  padding: clamp(16px, 3vw, 32px);
+/* ---------- Seção do vídeo ---------- */
+.section-video { background: var(--cafe); }
+.video-card {
+  max-width: 960px;
+  margin-inline: auto;
+  padding: clamp(10px, 2vw, 18px);
   border: 1px solid var(--borda);
   border-radius: var(--raio);
   background: var(--cafe-2);
   box-shadow: 10px 10px 0 var(--sombra-dura);
 }
-@media (max-width: 900px) {
-  .slides-card { grid-template-columns: 1fr; }
-}
-.slides-preview {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--borda);
-  border-radius: var(--raio);
-}
-.preview-stage {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  container-type: size;
-  background: var(--grad-entardecer);
-}
-.preview-play {
-  position: absolute;
-  top: 7%;
-  right: 5%;
-  z-index: 3;
-  display: grid;
-  place-items: center;
-  width: clamp(56px, 8vw, 72px);
-  height: clamp(56px, 8vw, 72px);
-  border: 0;
-  border-radius: 50%;
-  background: var(--terracota);
-  color: #fff;
-  cursor: pointer;
-  box-shadow: 4px 4px 0 var(--sombra-dura);
-  transition: transform .2s;
-}
-.preview-play:hover { transform: scale(1.06); }
-.preview-play svg { width: 30px; height: 30px; margin-left: 4px; fill: currentColor; }
-
-.slides-info h3 {
-  margin-bottom: .9em;
-  font-family: var(--serif);
-  font-size: clamp(1.5rem, 2.6vw, 2rem);
-  font-weight: 400;
-}
-
-.roteiro-wrap {
-  margin-top: 28px;
-  border: 1px solid var(--borda);
-  border-radius: var(--raio);
-  background: var(--cafe-2);
-}
-.roteiro-wrap summary {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 22px;
-  font-family: var(--mono);
-  font-size: .95rem;
-  list-style: none;
-  cursor: pointer;
-}
-.roteiro-wrap summary::-webkit-details-marker { display: none; }
-.roteiro-wrap summary::after {
-  content: '+';
-  color: var(--ocre);
-  font-size: 1.5rem;
-  line-height: 1;
-  transition: transform .3s;
-}
-.roteiro-wrap[open] summary::after { transform: rotate(45deg); }
-.roteiro {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 2px;
-  margin: 0;
-  padding: 0 12px 14px;
-  list-style: none;
-}
-.roteiro button {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
+.video-card iframe {
+  display: block;
   width: 100%;
-  padding: .6em .8em;
+  aspect-ratio: 16 / 9;
   border: 0;
   border-radius: 3px;
-  background: transparent;
-  color: var(--areia-2);
-  text-align: left;
-  cursor: pointer;
-  transition: background .2s, color .2s;
-}
-.roteiro button:hover { background: var(--cafe-3); color: var(--areia); }
-.roteiro-n {
-  min-width: 2ch;
-  color: var(--ocre);
-  font-family: var(--mono);
-  font-size: .85rem;
 }
 
 /* ---------- Quiz (estilo Kahoot, continua roxo) ---------- */
@@ -1307,8 +1216,6 @@ html.deck-aberto body { overflow: hidden; }
   transform: none;
   transition-delay: calc(.2s + var(--i, 0) * .09s);
 }
-.slide.is-static,
-.slide.is-static .a { transition: none; }
 
 /* imagem de fundo */
 .slide-bg {
