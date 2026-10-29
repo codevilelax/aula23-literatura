@@ -7,8 +7,8 @@
      erradas    → as três alternativas erradas
      explicacao → aparece depois que a pessoa responde
    As alternativas são embaralhadas a cada partida.
-   São 2 jogadores ao mesmo tempo: o 1 responde com Q W A S
-   e o 2 com I O K L (mesma posição das alternativas na tela).
+   São 2 jogadores. Eles falam a resposta e quem apresenta clica
+   no botão de cada um; cada acerto vale 1 ponto.
    ========================================================= */
 
 const TEMPO_POR_PERGUNTA = 20; // segundos
@@ -95,13 +95,6 @@ const PERGUNTAS = [
   const ICONE_CERTO = '<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';
   const ICONE_ERRADO = '<svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
 
-  // Teclas de cada jogador, na mesma posição das alternativas (2 em cima, 2 embaixo)
-  const TECLAS = [
-    ['KeyQ', 'KeyW', 'KeyA', 'KeyS'],
-    ['KeyI', 'KeyO', 'KeyK', 'KeyL'],
-  ];
-  const LETRAS = [['Q', 'W', 'A', 'S'], ['I', 'O', 'K', 'L']];
-
   let rodada = [];
   let indice = 0;
   let nomes = ['', ''];
@@ -136,10 +129,8 @@ const PERGUNTAS = [
     jogadores = nomes.map((nome, n) => ({
       nome: nome || `Jogador ${n + 1}`,
       pontos: 0,
-      acertos: 0,
       historico: [],
       escolha: null,
-      tempo: 0,
     }));
   }
 
@@ -184,7 +175,6 @@ const PERGUNTAS = [
             <div class="quiz-nome jogador-${n + 1}">
               <label for="quiz-nome-${n + 1}">Jogador ${n + 1}</label>
               <input id="quiz-nome-${n + 1}" maxlength="20" autocomplete="off" placeholder="Nome" value="${escapar(nomes[n])}">
-              <p class="quiz-nome-teclas">Responde com ${LETRAS[n].map(l => `<kbd>${l}</kbd>`).join('')}</p>
             </div>`).join('')}
         </div>
         <button type="submit" class="btn btn-primary btn-lg">Começar o jogo</button>
@@ -199,7 +189,7 @@ const PERGUNTAS = [
 
   function telaPergunta() {
     const p = rodada[indice];
-    jogadores.forEach(j => { j.escolha = null; j.tempo = 0; });
+    jogadores.forEach(j => { j.escolha = null; });
     app.innerHTML = `
       <div class="quiz-screen quiz-play">
         <div class="quiz-hud">
@@ -228,12 +218,15 @@ const PERGUNTAS = [
               <div class="quiz-controle-botoes">
                 ${FORMAS.map((f, i) => `
                   <button type="button" class="cor-${f.cor}" data-jogador="${n}" data-resposta="${i}"
-                          aria-label="${escapar(p.alternativas[i].texto)}" aria-keyshortcuts="${LETRAS[n][i]}">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">${f.svg}</svg><kbd>${LETRAS[n][i]}</kbd>
+                          aria-pressed="false" aria-label="${escapar(p.alternativas[i].texto)}">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">${f.svg}</svg>
                   </button>`).join('')}
               </div>
-              <p class="quiz-controle-status" data-status="${n}">Pensando…</p>
+              <p class="quiz-controle-status" data-status="${n}">Esperando a resposta…</p>
             </div>`).join('')}
+        </div>
+        <div class="quiz-revelar">
+          <button type="button" class="btn btn-primary btn-lg" data-quiz="revelar">Mostrar resposta</button>
         </div>
         <div class="quiz-feedback" aria-live="polite"></div>
       </div>`;
@@ -257,28 +250,25 @@ const PERGUNTAS = [
       relogio.textContent = Math.ceil(restante);
       barra.classList.toggle('is-urgente', urgente);
       relogio.classList.toggle('is-urgente', urgente);
-      if (restante <= 0) { revelar(); return; }
+      // o tempo só pressiona os jogadores: quem apresenta ainda marca e clica em "Mostrar resposta"
+      if (restante <= 0) return;
       quadro = requestAnimationFrame(passo);
     };
     quadro = requestAnimationFrame(passo);
   }
 
-  // O jogador n escolheu a alternativa i. A escolha fica escondida até os dois responderem.
+  // Marca a resposta que o jogador n falou. Dá para trocar até clicar em "Mostrar resposta".
   function escolher(n, i) {
-    const j = jogadores[n];
-    if (!respondendo || j.escolha !== null) return;
-    j.escolha = i;
-    j.tempo = Math.min(TEMPO_POR_PERGUNTA, (performance.now() - inicioPergunta) / 1000);
+    if (!respondendo) return;
+    jogadores[n].escolha = i;
 
     const controle = app.querySelector(`.quiz-controle.jogador-${n + 1}`);
     controle.classList.add('is-respondeu');
-    controle.querySelectorAll('button').forEach(b => { b.disabled = true; });
-    app.querySelector(`[data-status="${n}"]`).textContent = 'Respondeu!';
-
-    if (jogadores.every(x => x.escolha !== null)) revelar();
+    controle.querySelectorAll('button').forEach((b, k) => { b.setAttribute('aria-pressed', String(k === i)); });
+    app.querySelector(`[data-status="${n}"]`).textContent = 'Resposta marcada';
   }
 
-  // Mostra a resposta certa e soma os pontos (quando os dois respondem ou o tempo acaba)
+  // Mostra a resposta certa e soma os pontos
   function revelar() {
     if (!respondendo) return;
     respondendo = false;
@@ -290,16 +280,11 @@ const PERGUNTAS = [
 
     const resultados = jogadores.map(j => {
       const acertou = j.escolha === indiceCerto;
-      let ganhos = 0;
-      if (acertou) {
-        // de 1000 (resposta imediata) até 500 (no último segundo)
-        ganhos = Math.round(1000 * (1 - (j.tempo / TEMPO_POR_PERGUNTA) / 2));
-        j.pontos += ganhos;
-        j.acertos++;
-      }
+      if (acertou) j.pontos++;
       j.historico.push(acertou);
-      return { ganhos, tipo: j.escolha === null ? 'tempo' : acertou ? 'certo' : 'errado' };
+      return { tipo: j.escolha === null ? 'tempo' : acertou ? 'certo' : 'errado' };
     });
+    app.querySelector('.quiz-revelar').remove();
 
     app.querySelectorAll('.quiz-answer').forEach((card, i) => {
       const marca = card.querySelector('.quiz-mark');
@@ -322,7 +307,7 @@ const PERGUNTAS = [
       controle.classList.add(`is-${r.tipo}`);
       controle.querySelectorAll('button').forEach(b => { b.disabled = true; });
       app.querySelector(`[data-status="${n}"]`).textContent =
-        { certo: `Acertou! +${formatar(r.ganhos)}`, errado: 'Errou!', tempo: 'Não respondeu' }[r.tipo];
+        { certo: 'Acertou! +1 ponto', errado: 'Errou!', tempo: 'Não respondeu' }[r.tipo];
       animarNumero(app.querySelector(`[data-pontos="${n}"]`), antes[n], jogadores[n].pontos, 700);
     });
 
@@ -356,7 +341,7 @@ const PERGUNTAS = [
             <div class="quiz-final jogador-${i + 1}${j === vencedor ? ' is-vencedor' : ''}">
               <p class="quiz-final-nome">${escapar(j.nome)}</p>
               <p class="quiz-score"><span data-total="${i}">0</span></p>
-              <p class="quiz-score-label">pontos · ${j.acertos} de ${n} acertos</p>
+              <p class="quiz-score-label">${j.pontos === 1 ? 'ponto' : 'pontos'} de ${n}</p>
               <ol class="quiz-dots" aria-label="Respostas de ${escapar(j.nome)}">
                 ${j.historico.map((ok, k) => `
                   <li class="${ok ? 'dot--certo' : 'dot--errado'}" title="Pergunta ${k + 1}: ${ok ? 'acertou' : 'errou'}">
@@ -481,6 +466,9 @@ const PERGUNTAS = [
         telaNomes();
         rolarParaQuiz();
         break;
+      case 'revelar':
+        revelar();
+        break;
       case 'proxima':
         indice++;
         telaPergunta();
@@ -497,20 +485,6 @@ const PERGUNTAS = [
     nomes = [0, 1].map(n => app.querySelector(`#quiz-nome-${n + 1}`).value.trim());
     novaRodada();
     telaPergunta();
-  });
-
-  // Teclas de cada jogador (só com o quiz visível e a apresentação fechada)
-  document.addEventListener('keydown', e => {
-    if (!respondendo || e.altKey || e.ctrlKey || e.metaKey) return;
-    if (document.documentElement.classList.contains('deck-aberto')) return;
-    const area = app.getBoundingClientRect();
-    if (area.bottom < 0 || area.top > window.innerHeight) return;
-    TECLAS.forEach((teclas, n) => {
-      const i = teclas.indexOf(e.code);
-      if (i === -1) return;
-      e.preventDefault();
-      escolher(n, i);
-    });
   });
 
   telaInicio();

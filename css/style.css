@@ -1047,20 +1047,6 @@ strong { font-weight: 600; }
   font: 700 1.2rem var(--sans);
 }
 .quiz-nome input:focus-visible { outline: 3px solid var(--cor-jogador); outline-offset: 2px; }
-.quiz-nome-teclas { margin: 10px 0 0; color: #d9c6a5; font-size: .92rem; }
-.quiz-nome-teclas kbd,
-.quiz-controle-botoes kbd {
-  display: inline-grid;
-  place-items: center;
-  min-width: 1.7em;
-  margin-left: 4px;
-  padding: .1em .3em;
-  border-radius: 5px;
-  background: rgba(255, 255, 255, .9);
-  color: #1d1028;
-  font: 700 .82rem var(--mono);
-  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .25);
-}
 
 /* placar no topo */
 .quiz-hud { flex-wrap: nowrap; }
@@ -1119,24 +1105,35 @@ strong { font-weight: 600; }
   grid-column: 2;
   grid-row: 1 / 3;
   display: grid;
-  grid-template-columns: repeat(2, auto);
-  gap: 6px;
+  grid-template-columns: repeat(4, auto);
+  gap: 8px;
 }
 .quiz-controle-botoes button {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  padding: 5px 8px;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 46px;
   border: 0;
-  border-radius: 9px;
+  border-radius: 10px;
   cursor: pointer;
-  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .22);
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .22);
+  transition: transform .15s, opacity .2s, filter .2s;
 }
-.quiz-controle-botoes button:hover:not(:disabled) { filter: brightness(1.1); }
+.quiz-controle-botoes button:hover:not(:disabled) { filter: brightness(1.12); transform: translateY(-2px); }
 .quiz-controle-botoes button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
-.quiz-controle-botoes button:disabled { cursor: default; opacity: .45; }
-.quiz-controle-botoes svg { width: 18px; height: 18px; fill: currentColor; }
+.quiz-controle-botoes button:disabled { cursor: default; }
+.quiz-controle-botoes svg { width: 22px; height: 22px; fill: currentColor; }
+/* a resposta marcada fica em destaque e as outras apagadas */
+.quiz-controle.is-respondeu button { opacity: .35; }
+.quiz-controle.is-respondeu button[aria-pressed="true"] {
+  opacity: 1;
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+  transform: scale(1.08);
+}
 .quiz-controle.is-respondeu { background: rgba(255, 255, 255, .1); }
+
+.quiz-revelar { display: flex; justify-content: center; margin-top: clamp(12px, 2vh, 20px); }
 .quiz-controle.is-respondeu .quiz-controle-status { color: #fff; font-weight: 700; }
 .quiz-controle.is-certo .quiz-controle-status { color: #8ff07a; font-weight: 700; }
 .quiz-controle.is-errado .quiz-controle-status { color: #ff8a9b; font-weight: 700; }
