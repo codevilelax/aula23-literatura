@@ -362,7 +362,6 @@ strong { font-weight: 600; }
   color: var(--areia-2);
   font-size: clamp(1.05rem, 1.7vw, 1.2rem);
 }
-.hero-actions { display: flex; flex-wrap: wrap; gap: 16px; }
 .hero-meta {
   margin: 2.4em 0 0;
   color: var(--areia-2);
