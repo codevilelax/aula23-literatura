@@ -92,7 +92,6 @@ const PERGUNTAS = [
   ];
   const ICONE_CERTO = '<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';
   const ICONE_ERRADO = '<svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
-  const ICONE_TROFEU = '<svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>';
 
   let rodada = [];
   let indice = 0;
@@ -275,7 +274,7 @@ const PERGUNTAS = [
 
     app.innerHTML = `
       <div class="quiz-screen quiz-end">
-        <div class="quiz-trofeu" aria-hidden="true">${ICONE_TROFEU}</div>
+        <img class="quiz-trofeu" src="img/ai-dentro.jpeg" width="320" height="352" alt="">
         <p class="eyebrow">Fim de jogo</p>
         <p class="quiz-score"><span data-quiz="total">0</span></p>
         <p class="quiz-score-label">pontos</p>

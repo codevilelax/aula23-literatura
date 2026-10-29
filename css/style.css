@@ -967,19 +967,11 @@ strong { font-weight: 600; }
 
 /* tela final */
 .quiz-trofeu {
-  display: grid;
-  place-items: center;
-  width: 88px;
-  height: 88px;
+  width: auto;
+  height: clamp(120px, 20vh, 180px);
   margin-bottom: 18px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #ffd27a, #e8672a);
-  box-shadow: 0 0 0 10px rgba(255, 179, 122, .15);
-}
-.quiz-trofeu svg {
-  width: 44px; height: 44px;
-  fill: none; stroke: #2a1238; stroke-width: 2;
-  stroke-linecap: round; stroke-linejoin: round;
+  border-radius: 14px;
+  box-shadow: 0 0 0 6px rgba(255, 179, 122, .25);
 }
 .quiz-score {
   margin: 0;
