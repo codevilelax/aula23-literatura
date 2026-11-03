@@ -542,7 +542,7 @@ strong { font-weight: 600; }
 .na-obra p { margin: 0; font-size: 1.05rem; }
 .na-obra strong { color: var(--ocre); }
 
-/* A obra */
+/* A autora e a obra */
 .ficha {
   display: flex;
   flex-wrap: wrap;
@@ -610,6 +610,92 @@ strong { font-weight: 600; }
   font-family: var(--serif);
   font-size: 1.15rem;
   font-weight: 700;
+}
+
+/* o ano no canto do cartão é mais largo que o número */
+.card--ano .card-num { color: var(--acento); font-weight: 500; }
+.card--ano h3 { padding-right: 40px; }
+
+/* A obra em destaque: fundo terracota, como capa de livro */
+.section-obra {
+  --tx: var(--areia);
+  --tx-2: #f1dcc4;
+  --acento: #ffd08a;
+  --borda: rgba(241, 230, 211, .28);
+  --cartao: rgba(28, 20, 15, .3);
+  --sombra-dura: #561f0b;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: #9c3f1a;
+  background-image:
+    var(--grao),
+    radial-gradient(60% 55% at 88% 12%, rgba(217, 164, 65, .3), transparent 65%),
+    linear-gradient(160deg, #a8461d 0%, #8a3515 55%, #6a2810 100%);
+  background-blend-mode: multiply, normal, normal;
+}
+.obra-titulo {
+  font-family: var(--serif);
+  font-size: clamp(2.8rem, 7vw, 5rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -.02em;
+  text-wrap: balance;
+}
+.obra-autora {
+  margin: .7em 0 1.2em;
+  color: var(--acento);
+  font-family: var(--mono);
+  font-size: .85rem;
+  letter-spacing: .06em;
+}
+
+/* livro ilustrado (não é a capa real) */
+.livro {
+  justify-self: center;
+  width: min(100%, 290px);
+  perspective: 1200px;
+}
+.livro-capa {
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 2 / 3;
+  padding: 26px 24px 28px 36px;
+  border-radius: 3px 8px 8px 3px;
+  background-color: var(--cafe);
+  /* lombada escura à esquerda */
+  background-image:
+    var(--grao),
+    linear-gradient(90deg, rgba(0, 0, 0, .5) 0, transparent 14px, rgba(241, 230, 211, .08) 16px, transparent 24px);
+  background-blend-mode: multiply, normal;
+  color: var(--areia);
+  /* folhas aparecendo na borda e sombra dura */
+  box-shadow:
+    5px 5px 0 var(--papel),
+    10px 10px 0 var(--papel-2),
+    20px 20px 0 rgba(40, 14, 4, .5);
+  transform: rotateY(-16deg) rotateX(3deg);
+  transform-origin: left center;
+  transition: transform .6s cubic-bezier(.2, .7, .2, 1);
+}
+.livro:hover .livro-capa { transform: rotateY(-4deg); }
+.livro-autora {
+  color: var(--ocre);
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.livro-arte { flex: 1; min-height: 0; width: 100%; margin: 12px 0; }
+.livro-raios,
+.livro-halo { fill: none; stroke: var(--ocre); stroke-width: 2; stroke-linecap: round; }
+.livro-cabeca { fill: var(--terracota); }
+.livro-chao { fill: #33241a; }
+.livro-titulo {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  font-style: italic;
+  line-height: 1.02;
 }
 
 .fatos {
@@ -2051,6 +2137,7 @@ html.deck-aberto body { overflow: hidden; }
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: center;
+    align-content: start;
     column-gap: 14px;
     padding: 18px 22px 20px;
   }
@@ -2061,8 +2148,11 @@ html.deck-aberto body { overflow: hidden; }
   .cards, .fatos { gap: 20px; }
   .na-obra { margin-top: clamp(14px, 2.4vh, 24px); padding: 14px 20px; }
 
-  /* A obra */
-  .section-obra .section-head p:not(.eyebrow):not(.ficha) { margin-bottom: .5em; font-size: .98rem; line-height: 1.55; }
+  /* A autora e a obra */
+  .section-autora .section-head p:not(.eyebrow):not(.ficha),
+  .section-obra .section-head p:not(.eyebrow):not(.ficha):not(.obra-autora) { margin-bottom: .5em; font-size: .98rem; line-height: 1.55; }
+  .obra-titulo { font-size: clamp(2.6rem, min(5.5vw, 8vh), 4.6rem); }
+  .livro { width: clamp(190px, 34vh, 280px); }
   .ficha { margin-top: .8em; }
   .subtitulo { margin: clamp(16px, 2.6vh, 28px) 0 10px; font-size: 1.4rem; }
   .tema { padding: 12px 16px 14px 0; }
