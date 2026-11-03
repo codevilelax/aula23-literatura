@@ -1452,6 +1452,112 @@ html.deck-aberto body { overflow: hidden; }
   transition-delay: calc(.2s + var(--i, 0) * .09s);
 }
 
+/* ---------- Abertura: o sol nasce no horizonte e revela a capa ---------- */
+.deck-stage { --horizonte: 62%; }
+
+.deck-intro,
+.deck-intro-luz {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+  visibility: hidden;
+}
+.deck.is-abrindo .deck-intro,
+.deck.is-abrindo .deck-intro-luz { visibility: visible; }
+
+/* céu até a linha do horizonte: o sol nasce de trás dela */
+.deck-intro {
+  inset: 0 0 auto;
+  height: var(--horizonte);
+  overflow: hidden;
+}
+.deck-intro::before,
+.deck-intro::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+/* clarão do amanhecer */
+.deck-intro::before {
+  top: 0;
+  background: radial-gradient(70% 60% at 50% 100%, rgba(224, 122, 69, .35), rgba(180, 77, 34, .1) 45%, transparent 75%);
+}
+/* linha do horizonte */
+.deck-intro::after {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ocre) 25%, #ffe1a1 50%, var(--ocre) 75%, transparent);
+}
+.deck-intro-sol {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 24cqmin;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: radial-gradient(circle at 50% 35%, #ffe7b0, var(--ocre) 45%, var(--terracota-claro));
+  box-shadow: 0 0 6cqmin 1cqmin rgba(217, 164, 65, .55);
+}
+/* halo largo em gradiente (uma sombra desse tamanho sai cortada em quadrado) */
+.deck-intro-sol::before {
+  content: '';
+  position: absolute;
+  inset: -120%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(224, 122, 69, .4), rgba(180, 77, 34, .12) 55%, transparent);
+}
+/* borda de luz que acompanha a revelação */
+.deck-intro-luz {
+  left: 50%;
+  top: var(--horizonte);
+  width: 0;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  translate: -50% -50%;
+  opacity: 0;
+  box-shadow:
+    0 0 0 .3cqmin #ffe1a1,
+    0 0 5cqmin 1.5cqmin rgba(217, 164, 65, .65),
+    inset 0 0 5cqmin 1cqmin rgba(255, 225, 161, .45);
+}
+
+.deck.is-abrindo .deck-intro { animation: deck-apagar .45s ease 1s forwards; }
+.deck.is-abrindo .deck-intro::before { animation: deck-surgir 1s ease .35s both; }
+.deck.is-abrindo .deck-intro::after { animation: deck-horizonte .8s cubic-bezier(.2, .7, .2, 1) .1s both; }
+.deck.is-abrindo .deck-intro-sol {
+  animation:
+    deck-sol .9s cubic-bezier(.2, .7, .2, 1) .3s both,
+    deck-sol-brilha .45s ease 1s forwards;
+}
+/* a capa aparece num círculo que cresce a partir do sol */
+.deck.is-abrindo .slide.is-active {
+  transition: none;
+  animation: deck-revelar 1.1s cubic-bezier(.7, 0, .3, 1) .95s both;
+}
+.deck.is-abrindo .deck-intro-luz { animation: deck-luz 1.1s cubic-bezier(.7, 0, .3, 1) .95s forwards; }
+/* os textos da capa só entram depois da luz */
+.deck.is-abrindo .slide.is-active .a { transition-delay: calc(1.45s + var(--i, 0) * .12s); }
+.deck.is-abrindo .deck-ui,
+.deck.is-abrindo .deck-contador,
+.deck.is-abrindo .deck-progresso { animation: deck-surgir .6s ease 1.8s both; }
+
+@keyframes deck-surgir { from { opacity: 0; } }
+@keyframes deck-apagar { to { opacity: 0; } }
+@keyframes deck-horizonte { from { opacity: 0; transform: scaleX(0); } }
+@keyframes deck-sol { from { translate: -50% 15%; } }
+@keyframes deck-sol-brilha { to { scale: 1.5; } }
+@keyframes deck-revelar {
+  from { clip-path: circle(0 at 50% var(--horizonte)); }
+  to { clip-path: circle(150vmax at 50% var(--horizonte)); }
+}
+@keyframes deck-luz {
+  from { opacity: 1; }
+  to { opacity: 1; width: 300vmax; }
+}
+
 /* imagem de fundo */
 .slide-bg {
   position: absolute;
@@ -1552,6 +1658,12 @@ html.deck-aberto body { overflow: hidden; }
 }
 .capa-sub { margin: 0; color: var(--areia-2); font-size: 2cqw; }
 .capa-sub em { color: var(--ocre); }
+/* na capa, os textos também saem de um desfoque */
+.slide--capa .a {
+  filter: blur(.5cqw);
+  transition: opacity .6s ease, transform .7s cubic-bezier(.2, .7, .2, 1), filter .7s ease;
+}
+.slide--capa.is-active .a { filter: none; }
 
 /* frase de destaque */
 .frase {
@@ -1985,4 +2097,5 @@ html.deck-aberto body { overflow: hidden; }
     transition-delay: 0s !important;
   }
   .js .reveal { opacity: 1; transform: none; }
+  .deck-intro, .deck-intro-luz { display: none; }
 }

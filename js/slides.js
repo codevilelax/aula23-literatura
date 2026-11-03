@@ -279,6 +279,7 @@ const SLIDES = [
   let focoAnterior = null;
   let manterAbertoAoSairDaTelaCheia = false;
   let timerOcioso = null;
+  let timerAbertura = null;
 
   /* ---------- Montagem do HTML de cada slide ---------- */
   function textoPuro(html) {
@@ -442,8 +443,15 @@ const SLIDES = [
     aviso.textContent = `Slide ${n + 1} de ${total}: ${nomeDoSlide(SLIDES[n])}`;
   }
 
-  const proximo = () => irPara(atual + 1);
-  const anterior = () => irPara(atual - 1);
+  // mudar de slide no meio da abertura pula o resto dela
+  function navegar(n) {
+    n = Math.max(0, Math.min(total - 1, n));
+    if (n !== atual) terminarAbertura();
+    irPara(n);
+  }
+
+  const proximo = () => navegar(atual + 1);
+  const anterior = () => navegar(atual - 1);
 
   /* ---------- Tela cheia ---------- */
   const elementoTelaCheia = () => document.fullscreenElement || document.webkitFullscreenElement;
@@ -514,16 +522,25 @@ const SLIDES = [
     elementos.forEach(el => el.classList.remove('is-active', 'is-before'));
     // força o navegador a calcular o estado inicial, para as transições de entrada rodarem
     void deck.offsetWidth;
-    deck.classList.add('is-open');
+    // is-abrindo liga a animação do sol nascendo (o tempo dela está no CSS)
+    deck.classList.add('is-open', 'is-abrindo');
     irPara(inicio);
     deck.focus({ preventScroll: true });
     acordar();
+    clearTimeout(timerAbertura);
+    timerAbertura = setTimeout(terminarAbertura, 2600);
+  }
+
+  function terminarAbertura() {
+    clearTimeout(timerAbertura);
+    deck.classList.remove('is-abrindo');
   }
 
   function fechar() {
     if (!aberto) return;
     aberto = false;
     clearTimeout(timerOcioso);
+    terminarAbertura();
     sairTelaCheia();
 
     deck.classList.remove('is-open', 'is-idle');
@@ -575,10 +592,10 @@ const SLIDES = [
         if (e.shiftKey) anterior(); else proximo();
         break;
       case 'Home':
-        irPara(0);
+        navegar(0);
         break;
       case 'End':
-        irPara(total - 1);
+        navegar(total - 1);
         break;
       case 'Escape':
         fechar();
