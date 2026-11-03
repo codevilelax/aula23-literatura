@@ -634,6 +634,7 @@ strong { font-weight: 600; }
   background-blend-mode: multiply, normal, normal;
 }
 .obra-titulo {
+  margin-bottom: .3em;
   font-family: var(--serif);
   font-size: clamp(2.8rem, 7vw, 5rem);
   font-weight: 400;
@@ -641,13 +642,6 @@ strong { font-weight: 600; }
   line-height: 1;
   letter-spacing: -.02em;
   text-wrap: balance;
-}
-.obra-autora {
-  margin: .7em 0 1.2em;
-  color: var(--acento);
-  font-family: var(--mono);
-  font-size: .85rem;
-  letter-spacing: .06em;
 }
 
 /* capa do livro, levemente inclinada */
@@ -2114,7 +2108,8 @@ html.deck-aberto body { overflow: hidden; }
     aspect-ratio: 4 / 5;
     max-width: none;
   }
-  .retrato { max-width: clamp(280px, 44vh, 420px); }
+  /* abaixo de 300px a legenda quebra em duas linhas e invade o arco verde */
+  .retrato { max-width: clamp(300px, 44vh, 420px); }
 
   /* cartões: ícone ao lado do título */
   .section .card {
@@ -2127,6 +2122,7 @@ html.deck-aberto body { overflow: hidden; }
   }
   .section .card-icon { width: 40px; height: 40px; margin: 0; }
   .section .card h3 { margin: 0; padding-right: 24px; font-size: 1.2rem; }
+  .section .card--ano h3 { padding-right: 44px; }
   .section .card p { grid-column: 1 / -1; margin-top: 8px; font-size: .97rem; line-height: 1.5; }
   .card-num { top: 16px; right: 18px; }
   .cards, .fatos { gap: 20px; }
@@ -2134,9 +2130,17 @@ html.deck-aberto body { overflow: hidden; }
 
   /* A autora e a obra */
   .section-autora .section-head p:not(.eyebrow):not(.ficha),
-  .section-obra .section-head p:not(.eyebrow):not(.ficha):not(.obra-autora) { margin-bottom: .5em; font-size: .98rem; line-height: 1.55; }
-  .obra-titulo { font-size: clamp(2.6rem, min(5.5vw, 8vh), 4.6rem); }
-  .livro { width: clamp(190px, 34vh, 280px); }
+  .section-obra .section-head p:not(.eyebrow):not(.ficha) { margin-bottom: .5em; font-size: .98rem; line-height: 1.55; }
+  /* na obra, o texto fica com a largura que o livro não usa, e tudo aperta um pouco */
+  .section-obra { padding-block: clamp(16px, 2.6vh, 40px); }
+  .section-obra .split { grid-template-columns: 1fr auto; }
+  .section-obra .lead { max-width: none; }
+  .obra-titulo { font-size: clamp(2.4rem, min(5.5vw, 7.5vh), 4.6rem); }
+  .livro { width: clamp(150px, 25vh, 260px); margin-right: 20px; }
+  .section-obra .card { padding: 14px 20px 16px; }
+  .section-obra .card p { margin-top: 6px; }
+  .section-obra .subtitulo { margin-top: clamp(12px, 2vh, 24px); font-size: 1.25rem; }
+  .section-obra .tema h4 { font-size: .95rem; }
   .ficha { margin-top: .8em; }
   .subtitulo { margin: clamp(16px, 2.6vh, 28px) 0 10px; font-size: 1.4rem; }
   .tema { padding: 12px 16px 14px 0; }
@@ -2159,6 +2163,20 @@ html.deck-aberto body { overflow: hidden; }
   .hero-title { font-size: clamp(4.2rem, min(14vw, 17vh), 9.5rem); }
   .hero-tagline { margin-bottom: 1.4em; }
   .hero-meta { margin-top: 1.6em; }
+}
+
+/* telas baixas (notebook com a barra do navegador): a autora e a obra apertam mais */
+@media (min-width: 1024px) and (min-height: 620px) and (max-height: 700px) {
+  .section-autora, .section-obra { padding-block: 12px; }
+  .section-autora .section-head, .section-obra .section-head { margin-bottom: 12px; }
+  .section-autora .eyebrow, .section-obra .eyebrow { margin-bottom: .5em; }
+  .section-autora .ficha, .section-obra .ficha { margin-top: .5em; }
+  .section-autora .card, .section-obra .card { padding: 12px 18px 14px; }
+  .section-autora .card p, .section-obra .card p { margin-top: 4px; }
+  .obra-titulo { font-size: clamp(2.2rem, 6.5vh, 3rem); }
+  .section-obra .subtitulo { margin: 8px 0 6px; }
+  .section-obra .tema { padding-block: 8px 10px; }
+  .section-obra .tema p { font-size: .86rem; line-height: 1.4; }
 }
 
 /* Respeita quem prefere menos movimento */
