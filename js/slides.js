@@ -528,7 +528,7 @@ const SLIDES = [
     deck.focus({ preventScroll: true });
     acordar();
     clearTimeout(timerAbertura);
-    timerAbertura = setTimeout(terminarAbertura, 2600);
+    timerAbertura = setTimeout(terminarAbertura, 4600);
   }
 
   function terminarAbertura() {
